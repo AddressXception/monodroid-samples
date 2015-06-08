@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,7 +38,9 @@ namespace Camera2Raw
 			ORIENTATIONS.Append ((int)SurfaceOrientation.Rotation270, 270);
 		}
 
-		public Camera2RawFragment() : base(){}
+		public Camera2RawFragment () : base ()
+		{
+		}
 
 		/// <summary>
 		/// Timeout for the pre-capture sequence.
@@ -637,11 +638,11 @@ namespace Camera2Raw
 
 					// For still image captures, we use the largest available size.
 
-					var jpegs = map.GetOutputSizes((int)ImageFormatType.Jpeg);
-					Size largestJpeg = jpegs.MaxBy(element => element.Width * element.Height);
+					var jpegs = map.GetOutputSizes ((int)ImageFormatType.Jpeg);
+					Size largestJpeg = jpegs.MaxBy (element => element.Width * element.Height);
 
-					var raws = map.GetOutputSizes((int)ImageFormatType.RawSensor);
-					Size largestRaw = raws.MaxBy(element => element.Width * element.Height);
+					var raws = map.GetOutputSizes ((int)ImageFormatType.RawSensor);
+					Size largestRaw = raws.MaxBy (element => element.Width * element.Height);
 
 					lock (mCameraStateLock) {
 						// Set up ImageReaders for JPEG and RAW outputs.  Place these in a reference
@@ -1226,11 +1227,11 @@ namespace Camera2Raw
 						buffer.Get (bytes);
 						FileStream output = null;
 						try {
-							output = mFile.OpenWrite();
-							output.Write (bytes,0,bytes.Length);
+							output = mFile.OpenWrite ();
+							output.Write (bytes, 0, bytes.Length);
 							success = true;
 						} catch (IOException e) {
-							Log.Error(TAG, e.Message);
+							Log.Error (TAG, e.Message);
 						} finally {
 							mImage.Close ();
 							CloseOutput (output);
@@ -1242,7 +1243,7 @@ namespace Camera2Raw
 						DngCreator dngCreator = new DngCreator (mCharacteristics, mCaptureResult);
 						FileStream output = null;
 						try {
-							output = mFile.OpenWrite();
+							output = mFile.OpenWrite ();
 							dngCreator.WriteImage (output, mImage);
 							success = true;
 						} catch (IOException e) {
@@ -1266,7 +1267,7 @@ namespace Camera2Raw
 				// If saving the file succeeded, update MediaStore.
 				if (success) {
 					MediaScannerConnection.ScanFile (mContext, new string[] { mFile.FullName },
-						/*mimeTypes*/null, new MediaScannerClient());
+						/*mimeTypes*/null, new MediaScannerClient ());
 				}
 			}
 
@@ -1427,9 +1428,9 @@ namespace Camera2Raw
 				var activity = Activity;
 				return new AlertDialog.Builder (activity)
 					.SetMessage (mErrorMessage)
-					.SetPositiveButton (Android.Resource.String.Ok, new EventHandler<DialogClickEventArgs>((s,args) => {
-						Activity.Finish();
-					}))
+					.SetPositiveButton (Android.Resource.String.Ok, new EventHandler<DialogClickEventArgs> ((s, args) => {
+					Activity.Finish ();
+				}))
 					.Create ();
 			}
 
@@ -1493,7 +1494,8 @@ namespace Camera2Raw
 								throw new Java.Lang.Exception ("unclosable");
 							obj.Close ();
 						} catch (Java.Lang.Exception e) {
-							throw new RuntimeException (e);
+							if (e.Message != "unclosable")
+								throw new RuntimeException (e);
 						} finally {
 							mObject = default(T);
 						}

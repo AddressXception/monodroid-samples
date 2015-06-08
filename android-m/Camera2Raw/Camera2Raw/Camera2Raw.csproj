@@ -83,5 +83,11 @@
     <AndroidResource Include="Resources\values-v11\template-styles.xml" />
     <AndroidResource Include="Resources\values-v21\base-colors.xml" />
     <AndroidResource Include="Resources\values-v21\base-template-styles.xml" />
+    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\icon.png" />
   </ItemGroup>
 </Project>
