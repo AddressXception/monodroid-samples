@@ -16,8 +16,7 @@ namespace ActiveNotifications
 	public class MainActivity : SampleActivityBase
 	{
 		public ActiveNotificationFragment fragment;
-		public static readonly string ACTION_NOTIFICATION_DELETE 
-		= "com.xamarin.activenotifications.delete";
+		public static readonly string ACTION_NOTIFICATION_DELETE = "com.xamarin.activenotifications.delete";
 
 		bool logShown;
 		ANBroadcastReceiver deleteReceiver;
