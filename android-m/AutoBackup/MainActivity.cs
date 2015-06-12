@@ -9,7 +9,7 @@ using Android.OS;
 
 namespace AutoBackup
 {
-	[Activity (Label = "AutoBackup", MainLauncher = true, Theme = "@style/AppTheme")]
+	[Activity (Label = "@string/app_name", MainLauncher = true, Theme = "@style/AppTheme")]
 	public class MainActivity : Activity
 	{
 		protected override void OnCreate (Bundle bundle)

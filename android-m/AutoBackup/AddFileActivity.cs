@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 using Android.App;
 using Android.Content;
@@ -12,7 +12,8 @@ using Android.Views;
 using Android.Widget;
 using Android.Text;
 using Android.Util;
-using Java.IO;
+
+using Java.Interop;
 
 namespace AutoBackup
 {
@@ -116,6 +117,7 @@ namespace AutoBackup
      	*
      	* @param view a reference to the Create File button view.
      	*/
+		[Export]
 		public void OnCreateFileButtonClick (View view)
 		{
 			var fileNameEditText = FindViewById<EditText> (Resource.Id.file_name);
@@ -177,50 +179,43 @@ namespace AutoBackup
 		private void CreateFileWithRandomDataAndFinishActivity (string fileName, FileStorage storage, string sizeInBytes)
 		{
 			long size = Convert.ToInt32 (sizeInBytes);
-			File file = null;
-			System.IO.Stream fileOut = null;
-			BufferedOutputStream bufOut = null;
+			string filePath = null;
 
 			try {
 				switch (storage) {
 				case FileStorage.Internal:
-					file = GetInternalFile (fileName);
-					fileOut = OpenFileOutput (file.Name, FileCreationMode.Private);
+					filePath = Path.Combine (FilesDir.AbsolutePath, fileName);
 					break;
 
 				case FileStorage.External:
 					if (!Utils.IsExternalStorageAvailable ()) {
 						DisplayShortCenteredToast ("The external storage is not available");
 					} else {
-						File externalAppDir = GetExternalFilesDir (null);
-						file = new File (externalAppDir, fileName);
-						fileOut = new System.IO.FileStream (file.AbsolutePath, System.IO.FileMode.OpenOrCreate);
+						string externalAppDir = GetExternalFilesDir (null).Path;
+						filePath = Path.Combine (externalAppDir, fileName);
 					}
 					break;
 				case FileStorage.DoNotBackup:
-					file = new File (NoBackupFilesDir, fileName);
-					fileOut = new System.IO.FileStream (file.AbsolutePath, System.IO.FileMode.OpenOrCreate);
+					filePath = Path.Combine (NoBackupFilesDir.AbsolutePath, fileName);
 					break;
 				}
 
-				if (file == null || fileOut == null) {
-					Log.Debug (TAG, "Unable to create file output stream");
+				if (filePath == null) {
+					Log.Debug (TAG, "Unable to locate file destination path!");
 					// Returning back to the caller activity.
 					SetResult (Result.Canceled);
 					Finish ();
 					return;
 				}
 
-				bufOut = new BufferedOutputStream (fileOut);
-				for (int i = 0; i < size; i++) {
-					var random = new Random ();
-					var b = (byte) (255 * random.NextDouble ());
-					bufOut.Write (b);
-				}
+				byte[] randomBytes = new byte[size];
+				var random = new Random ();
+				for (int i = 0; i < randomBytes.Length; i++)
+					randomBytes[i] = (byte)(255 * random.NextDouble ());
+				
+				File.WriteAllBytes (filePath, randomBytes);
 
-				string message = string.Format ("File created: {0}, size: {1} bytes",
-					file.AbsolutePath, sizeInBytes);
-
+				string message = string.Format ("File created: {0}, size: {1} bytes", filePath, sizeInBytes);
 				DisplayShortCenteredToast (message);
 				Log.Debug (TAG, message);
 
@@ -232,14 +227,6 @@ namespace AutoBackup
 				// Returning back to the caller activity.
 				SetResult (Result.Canceled);
 				Finish ();
-			} finally {
-				if (bufOut != null) {
-					try {
-						bufOut.Close ();
-					} catch (Exception) {
-						// Ignore.
-					}
-				}
 			}
 		}
 
@@ -252,10 +239,10 @@ namespace AutoBackup
 
 		bool DoesFileExist (string fileName)
 		{
-			File file = GetInternalFile (fileName);
-			if (file.Exists ()) {
+			string filePath = Path.Combine (FilesDir.AbsolutePath, fileName);
+			if (File.Exists (filePath)) {
 				if (Log.IsLoggable (TAG, LogPriority.Debug))
-					Log.Debug (TAG, "This file exists: " + file.Name);
+					Log.Debug (TAG, "This file exists: " + fileName);
 				
 				return true;
 			}
@@ -294,11 +281,6 @@ namespace AutoBackup
 				
 				return false;
 			}
-		}
-
-		File GetInternalFile (string fileName)
-		{
-			return new File (FilesDir, fileName);
 		}
 						
 	}

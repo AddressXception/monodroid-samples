@@ -1,11 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
-
-using Java.IO;
+using System.IO;
 
 using Android.App;
 using Android.Content;
@@ -22,8 +20,8 @@ namespace AutoBackup
 	{
 		public static readonly int ADD_FILE_REQUEST = 1;
 
-		ArrayAdapter<File> filesArrayAdapter;
-		List<File> files;
+		ArrayAdapter<FileInfo> filesArrayAdapter;
+		List<FileInfo> files;
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
@@ -77,22 +75,21 @@ namespace AutoBackup
 			}
 		}
 
-		List<File> CreateListOfFiles ()
+		List<FileInfo> CreateListOfFiles ()
 		{
-			var listOfFiles = new List<File> ();
-			AddFilesToList (listOfFiles, Activity.FilesDir);
+			var listOfFiles = new List<FileInfo> ();
+			AddFilesToList (listOfFiles, new DirectoryInfo (Activity.FilesDir.AbsolutePath));
 
 			if (Utils.IsExternalStorageAvailable ())
-				AddFilesToList (listOfFiles, Activity.GetExternalFilesDir (null));
+				AddFilesToList (listOfFiles, new DirectoryInfo (Activity.GetExternalFilesDir (null).AbsolutePath));
 
-			AddFilesToList (listOfFiles, Activity.NoBackupFilesDir);
+			AddFilesToList (listOfFiles, new DirectoryInfo (Activity.NoBackupFilesDir.AbsolutePath));
 			return listOfFiles;
 		}
 
-		void AddFilesToList (List<File> listOfFiles, File dir)
+		void AddFilesToList (List<FileInfo> listOfFiles, DirectoryInfo dir)
 		{
-			File[] files = dir.ListFiles ();
-			foreach (File file in files)
+			foreach (FileInfo file in dir.EnumerateFiles ())
 				listOfFiles.Add (file);
 		}
 
@@ -104,7 +101,7 @@ namespace AutoBackup
 			if (filesArrayAdapter.Count > 0) 
 				filesArrayAdapter.Clear ();
 			
-			foreach (File file in files)
+			foreach (FileInfo file in files)
 				filesArrayAdapter.Add (file);
 			
 			// Display a message instructing to add files if no files found.
@@ -115,9 +112,9 @@ namespace AutoBackup
 		}
 	}
 
-	class FileArrayAdapter : ArrayAdapter<File>
+	class FileArrayAdapter : ArrayAdapter<FileInfo>
 	{
-		public FileArrayAdapter (Context context, int resource, IList<File> objects) : base (context, resource, objects)
+		public FileArrayAdapter (Context context, int resource, IList<FileInfo> objects) : base (context, resource, objects)
 		{
 		}
 
@@ -125,13 +122,13 @@ namespace AutoBackup
 		{
 			var inflater = LayoutInflater.From (Context);
 			View itemView = inflater.Inflate (Resource.Layout.file_list_item, parent, false);
+
 			var fileNameView = itemView.FindViewById <TextView> (Resource.Id.file_name);
-			var fileName = GetItem (position).AbsolutePath;
-			fileNameView.Text = fileName;
+			fileNameView.Text = GetItem (position).FullName;
+
 			var fileSize = itemView.FindViewById <TextView> (Resource.Id.file_size);
-			// TODO format bytes
-			string fileSizeInBytes = GetItem (position).Length ().ToString ();
-			fileSize.Text = fileSizeInBytes;
+			fileSize.Text = GetItem (position).Length.ToString ("N0");
+
 			return itemView;
 		}
 

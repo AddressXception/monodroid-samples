@@ -81,7 +81,7 @@
             android:layout_marginTop="40dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:onClick="onCreateFileButtonClick"
+            android:onClick="OnCreateFileButtonClick"
             android:text="Create" />
     </RelativeLayout>
 </LinearLayout>
