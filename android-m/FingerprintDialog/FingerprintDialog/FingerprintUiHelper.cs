@@ -30,16 +30,18 @@ namespace FingerprintDialog
 		/// Builder class for {@link FingerprintUiHelper} in which injected fields from Dagger
 		/// holds its fields and takes other arguments in the {@link #build} method.
 		/// </summary>
-		public class FingerprintUiHelperBuilder {
+		public class FingerprintUiHelperBuilder
+		{
 			FingerprintManager mFingerPrintManager;
 
-			public FingerprintUiHelperBuilder(FingerprintManager fingerprintManager) {
+			public FingerprintUiHelperBuilder (FingerprintManager fingerprintManager)
+			{
 				mFingerPrintManager = fingerprintManager;
 			}
 
-			public FingerprintUiHelper Build (ImageView icon, TextView errorTextView, Callback callback) {
-				return new FingerprintUiHelper(mFingerPrintManager, icon, errorTextView,
-					callback);
+			public FingerprintUiHelper Build (ImageView icon, TextView errorTextView, Callback callback)
+			{
+				return new FingerprintUiHelper (mFingerPrintManager, icon, errorTextView, callback);
 			}
 		}
 
@@ -51,30 +53,35 @@ namespace FingerprintDialog
 		/// <param name="icon">Icon.</param>
 		/// <param name="errorTextView">Error text view.</param>
 		/// <param name="callback">Callback.</param>
-		FingerprintUiHelper(FingerprintManager fingerprintManager,
-			ImageView icon, TextView errorTextView, Callback callback) {
+		FingerprintUiHelper (FingerprintManager fingerprintManager,
+			ImageView icon, TextView errorTextView, Callback callback)
+		{
 			mFingerprintManager = fingerprintManager;
 			mIcon = icon;
 			mErrorTextView = errorTextView;
 			mCallback = callback;
 		}
 
-		public bool IsFingerprintAuthAvailable() {
-			return mFingerprintManager.IsHardwareDetected
-				&& mFingerprintManager.HasEnrolledFingerprints;
+		public bool IsFingerprintAuthAvailable {
+			get {
+				return mFingerprintManager.IsHardwareDetected
+					&& mFingerprintManager.HasEnrolledFingerprints;
+			}
 		}
 
-		public void StartListening(FingerprintManager.CryptoObject cryptoObject) {
-			if (!IsFingerprintAuthAvailable()) {
+		public void StartListening (FingerprintManager.CryptoObject cryptoObject)
+		{
+			if (!IsFingerprintAuthAvailable)
 				return;
-			}
-			mCancellationSignal = new CancellationSignal();
+			
+			mCancellationSignal = new CancellationSignal ();
 			mSelfCancelled = false;
-			mFingerprintManager.Authenticate(cryptoObject, mCancellationSignal, this, 0 /* flags */);
+			mFingerprintManager.Authenticate (cryptoObject, mCancellationSignal, this, 0 /* flags */);
 			mIcon.SetImageResource (Resource.Drawable.ic_fp_40px);
 		}
 
-		public void StopListening() {
+		public void StopListening ()
+		{
 			if (mCancellationSignal != null) {
 				mSelfCancelled = true;
 				mCancellationSignal.Cancel ();
@@ -82,47 +89,53 @@ namespace FingerprintDialog
 			}
 		}
 
-		public void OnAuthenticationError(int errMsgId, string errString) {
+		public override void OnAuthenticationError (int errMsgId, Java.Lang.ICharSequence errString)
+		{
 			if (!mSelfCancelled) {
-				ShowError(errString);
-				mIcon.PostDelayed(() => {
-						mCallback.OnError();
+				ShowError (errString.ToString ());
+				mIcon.PostDelayed (() => {
+					mCallback.OnError ();
 				}, ERROR_TIMEOUT_MILLIS);
 			}
 		}
 
-		public void OnAuthenticationHelp(int helpMsgId, string helpString) {
-			ShowError(helpString);
+		public override void OnAuthenticationHelp (int helpMsgId, Java.Lang.ICharSequence helpString)
+		{
+			ShowError (helpString.ToString ());
 		}
 
-		public override void OnAuthenticationFailed() {
-			ShowError(mIcon.Resources.GetString(Resource.String.fingerprint_not_recognized));
+		public override void OnAuthenticationFailed ()
+		{
+			ShowError (mIcon.Resources.GetString (Resource.String.fingerprint_not_recognized));
 		}
 
-		public override void OnAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
-			mErrorTextView.RemoveCallbacks(ResetErrorTextRunnable);
-			mIcon.SetImageResource(Resource.Drawable.ic_fingerprint_success);
-			mErrorTextView.SetTextColor(mErrorTextView.Resources.GetColor(Resource.Color.success_color, null));
-			mErrorTextView.Text = mErrorTextView.Resources.GetString(Resource.String.fingerprint_success);
-			mIcon.PostDelayed(() => {
-					mCallback.OnAuthenticated();
+		public override void OnAuthenticationSucceeded (FingerprintManager.AuthenticationResult result)
+		{
+			mErrorTextView.RemoveCallbacks (ResetErrorTextRunnable);
+			mIcon.SetImageResource (Resource.Drawable.ic_fingerprint_success);
+			mErrorTextView.SetTextColor (mErrorTextView.Resources.GetColor (Resource.Color.success_color, null));
+			mErrorTextView.Text = mErrorTextView.Resources.GetString (Resource.String.fingerprint_success);
+			mIcon.PostDelayed (() => {
+				mCallback.OnAuthenticated ();
 			}, SUCCESS_DELAY_MILLIS);
 		}
 
-		void ShowError(string error) {
-			mIcon.SetImageResource(Resource.Drawable.ic_fingerprint_error);
+		void ShowError (string error)
+		{
+			mIcon.SetImageResource (Resource.Drawable.ic_fingerprint_error);
 			mErrorTextView.Text = error;
-			mErrorTextView.SetTextColor(
-				mErrorTextView.Resources.GetColor(Resource.Color.warning_color, null));
-			mErrorTextView.RemoveCallbacks(ResetErrorTextRunnable);
-			mErrorTextView.PostDelayed(ResetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
+			mErrorTextView.SetTextColor (
+				mErrorTextView.Resources.GetColor (Resource.Color.warning_color, null));
+			mErrorTextView.RemoveCallbacks (ResetErrorTextRunnable);
+			mErrorTextView.PostDelayed (ResetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
 		}
 
-		void ResetErrorTextRunnable() {
-			mErrorTextView.SetTextColor(
-				mErrorTextView.Resources.GetColor(Resource.Color.hint_color, null));
-			mErrorTextView.Text = mErrorTextView.Resources.GetString(Resource.String.fingerprint_hint);
-			mIcon.SetImageResource(Resource.Drawable.ic_fp_40px);
+		void ResetErrorTextRunnable ()
+		{
+			mErrorTextView.SetTextColor (
+				mErrorTextView.Resources.GetColor (Resource.Color.hint_color, null));
+			mErrorTextView.Text = mErrorTextView.Resources.GetString (Resource.String.fingerprint_hint);
+			mIcon.SetImageResource (Resource.Drawable.ic_fp_40px);
 		}
 	}
 }

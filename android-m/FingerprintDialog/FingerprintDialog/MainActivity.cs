@@ -22,25 +22,24 @@ namespace FingerprintDialog
 	/// <summary>
 	/// Main entry point for the sample, showing a backpack and "Purchase" button.
 	/// </summary>
-	[Activity(MainLauncher = true, Label="@string/app_name")]
+	[Activity (MainLauncher = true, Label = "@string/app_name", Theme = "@style/AppTheme")]
 	public class MainActivity : Activity
 	{
 		static readonly string TAG = "MainActivity";
 
 		static readonly string DIALOG_FRAGMENT_TAG = "myFragment";
 		static readonly string SECRET_MESSAGE = "Very secret message";
+
 		// Alias for our key in the Android Key Store
 		static readonly string KEY_NAME = "my_key";
 
 		FingerprintModule fingerprintModule;
-
 		KeyguardManager mKeyguardManager;
 		FingerprintAuthenticationDialogFragment mFragment;
 		KeyStore mKeyStore;
 		KeyGenerator mKeyGenerator;
 		Cipher mCipher;
 
-		  
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
@@ -50,7 +49,7 @@ namespace FingerprintDialog
 			mKeyGenerator = fingerprintModule.ProvidesKeyGenerator ();
 			mCipher = fingerprintModule.ProvidesCipher (mKeyStore);
 
-			RequestPermissions (new []{ Manifest.Permission.UseFingerprint }, 0);
+			RequestPermissions (new [] { Manifest.Permission.UseFingerprint }, 0);
 		}
 
 
@@ -58,11 +57,10 @@ namespace FingerprintDialog
 		{
 			if (requestCode == 0 && state [0] == (int)Android.Content.PM.Permission.Granted) {
 				SetContentView (Resource.Layout.activity_main);
-				Button purchaseButton = (Button)FindViewById (Resource.Id.purchase_button);
+				var purchaseButton = (Button)FindViewById (Resource.Id.purchase_button);
 				if (!mKeyguardManager.IsKeyguardSecure) {
 					// Show a message that the user hasn't set up a fingerprint or lock screen.
-					Toast.MakeText (this,
-						"Secure lock screen hasn't set up.\n"
+					Toast.MakeText (this, "Secure lock screen hasn't set up.\n"
 						+ "Go to 'Settings -> Security -> Fingerprint' to set up a fingerprint",
 						ToastLength.Long).Show ();
 					purchaseButton.Enabled = false;
@@ -92,8 +90,7 @@ namespace FingerprintDialog
 				// This happens if the lock screen has been disabled or reset after the key was
 				// generated, or if a fingerprint got enrolled after the key was generated.
 				Toast.MakeText (this, "Keys are invalidated after created. Retry the purchase\n"
-				+ e.Message,
-					ToastLength.Long).Show ();
+				+ e.Message, ToastLength.Long).Show ();
 			} catch (KeyStoreException e) {
 				throw new RuntimeException ("Failed to init Cipher", e);
 			} catch (CertificateException e) {
@@ -192,3 +189,4 @@ namespace FingerprintDialog
 		}
 	}
 }
+

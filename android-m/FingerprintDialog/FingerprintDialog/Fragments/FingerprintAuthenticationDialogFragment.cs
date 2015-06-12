@@ -36,10 +36,7 @@ namespace FingerprintDialog
 
 		FingerprintUiHelper.FingerprintUiHelperBuilder mFingerprintUiHelperBuilder;
 		InputMethodManager mInputMethodManager;
-
-		public FingerprintAuthenticationDialogFragment ()
-		{
-		}
+	
 
 		public override void OnCreate (Bundle savedInstanceState)
 		{
@@ -55,9 +52,7 @@ namespace FingerprintDialog
 			Dialog.SetTitle (GetString (Resource.String.sign_in));
 			var v = inflater.Inflate (Resource.Layout.fingerprint_dialog_container, container, false);
 			mCancelButton = (Button)v.FindViewById (Resource.Id.cancel_button);
-			mCancelButton.Click += (object sender, EventArgs e) => {
-				Dismiss ();
-			};
+			mCancelButton.Click += (object sender, EventArgs e) => Dismiss ();
 
 			mSecondDialogButton = (Button)v.FindViewById (Resource.Id.second_dialog_button);
 			mSecondDialogButton.Click += (object sender, EventArgs e) => {
@@ -67,6 +62,7 @@ namespace FingerprintDialog
 					VerifyPassword ();
 				}
 			};
+
 			mFingerprintContent = v.FindViewById (Resource.Id.fingerprint_container);
 			mBackupContent = v.FindViewById (Resource.Id.backup_container);
 			mPassword = (EditText)v.FindViewById (Resource.Id.password);
@@ -78,23 +74,24 @@ namespace FingerprintDialog
 
 			// If fingerprint authentication is not available, switch immediately to the backup
 			// (password) screen.
-			if (!mFingerprintUiHelper.IsFingerprintAuthAvailable ()) {
+			if (!mFingerprintUiHelper.IsFingerprintAuthAvailable)
 				GoToBackup ();
-			}
+
 			return v;
 		}
 
 		public override void OnResume ()
 		{
 			base.OnResume ();
-			if (mStage == Stage.Fingerprint) {
+
+			if (mStage == Stage.Fingerprint)
 				mFingerprintUiHelper.StartListening (mCryptoObject);
-			}
 		}
 
 		public override void OnPause ()
 		{
 			base.OnPause ();
+
 			mFingerprintUiHelper.StopListening ();
 		}
 
@@ -151,7 +148,8 @@ namespace FingerprintDialog
 			return password.Length > 0;
 		}
 
-		void ShowKeyboardRunnable() {
+		void ShowKeyboardRunnable ()
+		{
 			mInputMethodManager.ShowSoftInput (mPassword, 0);
 		}
 
