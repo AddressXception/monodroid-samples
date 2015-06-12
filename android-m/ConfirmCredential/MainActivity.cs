@@ -30,7 +30,7 @@ namespace ConfirmCredential
      	* If the user has unlocked the device Within the last this number of seconds,
      	* it can be considered as an authenticator.
      	*/
-		static readonly int AUTHENTICATION_DURATION_SECONDS = 30;
+		static readonly int AUTHENTICATION_DURATION_SECONDS = 10;
 
 		KeyguardManager keyguardManager;
 
@@ -66,7 +66,7 @@ namespace ConfirmCredential
 			try {
 				var keyStore = KeyStore.GetInstance ("AndroidKeyStore");
 				keyStore.Load (null);
-				var secretKey = (SecretKey)keyStore.GetKey (KEY_NAME, null);
+				IKey secretKey = keyStore.GetKey (KEY_NAME, null);
 				var cipher = Cipher.GetInstance (
 					KeyProperties.KeyAlgorithmAes + "/" + KeyProperties.BlockModeCbc + "/"
 					+ KeyProperties.EncryptionPaddingPkcs7);
@@ -106,7 +106,7 @@ namespace ConfirmCredential
 
 				// Set the alias of the entry in Android KeyStore where the key will appear
 				// and the constrains (purposes) in the constructor of the Builder
-				keyGenerator.Init (new KeyGenParameterSpec.Builder(KEY_NAME,
+				keyGenerator.Init (new KeyGenParameterSpec.Builder (KEY_NAME,
 					KeyProperties.PurposeEncrypt | KeyProperties.PurposeDecrypt)
 					.SetBlockModes (KeyProperties.BlockModeCbc)
 					.SetUserAuthenticationRequired (true)
@@ -154,12 +154,12 @@ namespace ConfirmCredential
 			var textView = FindViewById <TextView> (
 				Resource.Id.already_has_valid_device_credential_message);
 			textView.Visibility = ViewStates.Visible;
+
 			textView.Text = GetString (
 				Resource.String.already_confirmed_device_credentials_within_last_x_seconds,
 				AUTHENTICATION_DURATION_SECONDS);
 			FindViewById (Resource.Id.purchase_button).Enabled = false;
 		}
-
 	}
 }
 
