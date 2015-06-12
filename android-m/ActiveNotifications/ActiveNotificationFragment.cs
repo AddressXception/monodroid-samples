@@ -71,13 +71,21 @@ namespace ActiveNotifications
 		 */
 		public void UpdateNumberOfNotifications () 
 		{
-			// Query the currently displayed notifications.
-			StatusBarNotification[] activeNotifications = notificationManager.GetActiveNotifications ();
+			/** TODO Clearing large sets of notifications at once currently throws an exception. 
+			 * See https://github.com/googlesamples/android-ActiveNotifications/issues/1
+			 * for more information.
+			*/
+			try {
+				// Query the currently displayed notifications.
+				StatusBarNotification[] activeNotifications = notificationManager.GetActiveNotifications ();
 
-			int totalNotifications = activeNotifications.Length;
-			numberOfNotifications.Text = GetString (Resource.String.active_notifications, totalNotifications);
+				int totalNotifications = activeNotifications.Length;
+				numberOfNotifications.Text = GetString (Resource.String.active_notifications, totalNotifications);
 
-			CommonSampleLibrary.Log.Info (TAG, GetString (Resource.String.active_notifications, totalNotifications));
+				CommonSampleLibrary.Log.Info (TAG, GetString (Resource.String.active_notifications, totalNotifications));
+			} catch (Exception e) {
+				Console.WriteLine (e.ToString ());
+			}
 		}
 	}
 }
