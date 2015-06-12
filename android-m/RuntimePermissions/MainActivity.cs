@@ -8,13 +8,15 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Content.PM;
+using Android.Util;
 
 using CommonSampleLibrary;
-using Android.Util;
+using Log = CommonSampleLibrary.Log;
+using Java.Interop;
 
 namespace RuntimePermissions
 {
-	[Activity (Label = "RuntimePermissions", MainLauncher = true)]
+	[Activity (Label = "@string/app_name", MainLauncher = true, Theme = "@style/AppTheme")]
 	public class MainActivity : SampleActivityBase
 	{
 		public override string TAG {
@@ -48,6 +50,7 @@ namespace RuntimePermissions
      	* Called when the 'show camera' button is clicked.
      	* Callback is defined in resource layout definition.
      	*/
+		[Export]
 		public void ShowCamera (View view)
 		{
 			Log.Info (TAG, "Show camera button pressed. Checking permission.");
@@ -68,6 +71,7 @@ namespace RuntimePermissions
      	* Called when the 'show camera' button is clicked.
      	* Callback is defined in resource layout definition.
      	*/
+		[Export]
 		public void ShowContacts (View v)
 		{
 			Log.Info (TAG, "Show contacts button pressed. Checking permissions.");
@@ -196,7 +200,8 @@ namespace RuntimePermissions
 			msgFilter.NextNode = logFragment.LogView;
 		}
 
-		public override void OnBackPressed ()
+		[Export]
+		public void OnBackClick (View view)
 		{
 			FragmentManager.PopBackStack ();
 		}

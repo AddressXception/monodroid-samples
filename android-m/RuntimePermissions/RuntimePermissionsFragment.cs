@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,14 +20,14 @@ namespace RuntimePermissions
 			View root = inflater.Inflate (Resource.Layout.fragment_main, null);
 
 			if (!PermissionUtil.IsMNC) {
-				/*
+			/*
             The contacts permissions have been declared in the AndroidManifest for Android M only.
             They are not available on older platforms, so we are hiding the button to access the
             contacts database.
             This shows how new runtime-only permissions can be added, that do not apply to older
             platform versions. This can be useful for automated updates where additional
             permissions might prompt the user on upgrade.
-             */
+            */
 				root.FindViewById (Resource.Id.button_camera).Visibility = ViewStates.Gone;
 			}
 
