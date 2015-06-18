@@ -56,11 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
-    <None Include="Resources\mipmap-hdpi\icon.png" />
-    <None Include="Resources\mipmap-mdpi\icon.png" />
-    <None Include="Resources\mipmap-xhdpi\icon.png" />
-    <None Include="Resources\mipmap-xxhdpi\icon.png" />
-    <None Include="Resources\mipmap-xxxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\fragment_camera.axml" />
@@ -81,6 +76,11 @@
     <AndroidResource Include="Resources\values-v21\base-colors.xml" />
     <AndroidResource Include="Resources\values-v21\base-template-styles.xml" />
     <AndroidResource Include="Resources\drawable-hdpi\tile.9.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>

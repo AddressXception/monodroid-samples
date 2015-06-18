@@ -105,7 +105,6 @@ namespace RuntimePermissions
 					messageText.Text = Resources.GetString (Resource.String.contacts_string, totalCount, name);
 					CommonSampleLibrary.Log.Debug (TAG, "First contact loaded: " + name);
 					CommonSampleLibrary.Log.Debug (TAG, "Total number of contacts: " + totalCount);
-					CommonSampleLibrary.Log.Debug (TAG, "Total number of contacts: " + totalCount);
 				} else {
 					CommonSampleLibrary.Log.Debug (TAG, "List of contacts is empty.");
 					messageText.Text = GetString (Resource.String.contacts_empty);

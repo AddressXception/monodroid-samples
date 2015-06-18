@@ -39,9 +39,9 @@ namespace RuntimePermissions
 			if (camera == null || cameraInfo == null)
 				return;
 			
-			camera = camera;
-			cameraInfo = cameraInfo;
-			displayOrientation = displayOrientation;
+			this.camera = camera;
+			this.cameraInfo = cameraInfo;
+			this.displayOrientation = displayOrientation;
 
 			// Install a SurfaceHolder.Callback so we get notified when the
 			// underlying surface is created and destroyed.
