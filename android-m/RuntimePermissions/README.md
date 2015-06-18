@@ -6,6 +6,9 @@ This sample shows runtime permissions available in Android M and above. It shows
 Instructions
 ------------
 
+* Tap on the Camera or Contacts buttons to display a permissions request dialog.
+* Grant permission to view Camera or Contacts fragments.
+
 Build Requirements
 ------------------
 Using this sample requires the Android M Developer Preview and the Xamarin.Android M Web Preview

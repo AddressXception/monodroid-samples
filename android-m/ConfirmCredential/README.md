@@ -6,6 +6,9 @@ This sample demonstrates how to use device credentials (PIN, Pattern, Password) 
 Instructions
 ------------
 
+* Set up a secure lock screen in ‘Settings -> Security -> Screenlock’.
+* Tap the Purchase button and confirm the secure lock screen credentials. 
+
 Build Requirements
 ------------------
 Using this sample requires the Android M Developer Preview and the Xamarin.Android M Web Preview

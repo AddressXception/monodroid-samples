@@ -6,6 +6,8 @@ This sample demonstrates how to selectively disable Automatic Backups in Android
 Instructions
 ------------
 
+* Tap the Add File button to create a file with selected specifications.
+
 Build Requirements
 ------------------
 Using this sample requires the Android M Developer Preview and the Xamarin.Android M Web Preview
