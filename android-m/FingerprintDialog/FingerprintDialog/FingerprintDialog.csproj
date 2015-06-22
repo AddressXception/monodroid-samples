@@ -50,6 +50,7 @@
     <Compile Include="Fragments\FingerprintAuthenticationDialogFragment.cs" />
     <Compile Include="FingerprintModule.cs" />
     <Compile Include="FingerprintUiHelper.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
